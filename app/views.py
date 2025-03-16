@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.db.models import Count
 from django.views import View
 from .models import Product
+from .forms import CustomerRegistrationForm
+from django.contrib import messages
+
 
 def home(request):
     return render(request, "app/home.html")
@@ -31,3 +34,18 @@ class ProductDetail(View):
     def get(self, request, pk):
         product = Product.objects.get(pk=pk)
         return render(request, 'app/productdetail.html', locals())
+
+class CustomerRegistrationView(View):
+    def get(self, request):
+        form = CustomerRegistrationForm()
+        return render(request, 'app/customerregistration.html', locals())
+    
+    def post(self, request):# when we submit form, come here
+        form = CustomerRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Congratulations! User register Successfully")
+        else:
+            messages.warning(request, "Invalid Input Data")
+            
+        return render(request, 'app/customerregistration.html', locals())
