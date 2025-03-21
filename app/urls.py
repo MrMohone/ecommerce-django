@@ -15,6 +15,10 @@ urlpatterns = [
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('address/', views.address, name='address'),
     path('updateAddress/<int:pk>', views.updateAddress.as_view(), name='updateAddress'),
+    
+    path('add-to-cart/', views.add_to_cart, name='add-to-cart'),
+    path('cart/', views.show_cart, name='showcart'),
+    path('checkout/', views.show_cart, name='checkout'),
    
     
     #registration authentication
@@ -32,7 +36,7 @@ urlpatterns = [
                 form_class=MyPasswordRestForm), name='password-reset'),
     path('password-reset/done/',auth_view.PasswordResetDoneView.as_view(template_name='app/password_reset_done.html'), name='password_reset_done'),
     
-    path('password-reset-confrim/<uidb64>/<token>/',auth_view.PasswordResetConfirmView.as_view(template_name='app/password_reset_confrim.html',form_class=MySetPasswordForm),name='password_reset_confirm'),
+    path('password-reset-confrim/<uidb64>/<token>/',auth_view.PasswordResetConfirmView.as_view(template_name='app/password_reset_confrim.html',form_class=MySetPasswordForm),name='password_reset_confrim'),
     
     path('password-reset-complete/',auth_view.PasswordResetCompleteView.as_view(template_name='app/password_reset_complete.html'), name='password_reset_complete'),
     
