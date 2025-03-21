@@ -111,9 +111,13 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR/'media/'
 
+
 LOGIN_REDIRECT_URL = '/profile/' #when he authenticated come here
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#for display all email links in the console
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
