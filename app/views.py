@@ -1,9 +1,11 @@
+from django.http import JsonResponse
 from django.shortcuts import render,redirect
 from django.db.models import Count
 from django.views import View
 from .models import Cart, Product,Customer
 from .forms import CustomerRegistrationForm, CustomerProfileForm
 from django.contrib import messages
+from django.db.models import Q #Q is required for multiple conditions
 
 
 def home(request):
@@ -120,3 +122,80 @@ def show_cart(request):
     totalamount = amount + 40 #40 for shipping price
         
     return render(request, 'app/addtocart.html', locals())
+
+#linked from myscript.js
+def plus_cart(request):
+    if request.method == "GET":
+        prod_id = request.GET['prod_id']
+        # Q is required for multiple conditions
+        c = Cart.objects.filter(Q(product=prod_id) & Q(user=request.user)).first()
+        if c:
+            c.quantity += 1  # current quantity increase by one
+            c.save()  # update the cart
+
+            # now, get data from cart
+            user = request.user
+            cart = Cart.objects.filter(user=user)
+            amount = 0
+            for p in cart:
+                value = p.quantity * p.product.discounted_price
+                amount = amount + value
+            totalamount = amount + 40
+
+            data = {
+                'quantity': c.quantity,
+                'amount': amount,
+                'totalamount': totalamount
+            }
+            return JsonResponse(data)
+        else:
+            return JsonResponse({'error': 'Cart item not found'}, status=404)
+        
+def minus_cart(request):
+    if request.method == "GET":
+        prod_id = request.GET['prod_id']
+        # Q is required for multiple conditions
+        c = Cart.objects.filter(Q(product=prod_id) & Q(user=request.user)).first()
+        if c:
+            c.quantity -= 1  # current quantity increase by one
+            c.save()  # update the cart
+
+            # now, get data from cart
+            user = request.user
+            cart = Cart.objects.filter(user=user)
+            amount = 0
+            for p in cart:
+                value = p.quantity * p.product.discounted_price
+                amount = amount + value
+            totalamount = amount + 40
+
+            data = {
+                'quantity': c.quantity,
+                'amount': amount,
+                'totalamount': totalamount
+            }
+            return JsonResponse(data)
+        else:
+            return JsonResponse({'error': 'Cart item not found'}, status=404)
+
+
+
+def remove_cart(request):
+    if request.method == "GET":
+        prod_id = request.GET['prod_id']
+        c = Cart.objects.filter(Q(product=prod_id) & Q(user=request.user)).first()
+        c.delete()
+        user = request.user
+        cart = Cart.objects.filter(user=user)
+        amount = 0
+        for p in cart:
+            value = p.quantity * p.product.discounted_price
+            amount = amount + value
+        totalamount = amount + 40
+
+        data = {
+            'quantity': c.quantity,
+            'amount': amount,
+            'totalamount': totalamount
+        }
+        return JsonResponse(data)

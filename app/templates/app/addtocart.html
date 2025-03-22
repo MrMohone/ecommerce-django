@@ -23,12 +23,10 @@
                                 <div class="my-3">
                                     <label for="quantity">Quantity</label>
                                     <a class="minus-cart btn" pid={{item.product.id}}><li class="fas fa-minus-square fa-lg"></li></a>
+                                    
+                                    <span id='quantity'>{{item.quantity}}</span>
 
-                                      <span id='quantity'>{{item.quantity}}</span>
-                                      
-                                    <a class='plus-cart btn' pid={{item.product.id}}>
-                                        <li class="fas fa-plus-square fa-lg"></li>
-                                    </a>
+                                    <a class='plus-cart btn' pid={{item.product.id}}><li class="fas fa-plus-square fa-lg"></li></a>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <a href="#" class="remove-cart btn btn-sm btn-secondary mr-3" pid={{item.product.id}}>Remove Item</a>
