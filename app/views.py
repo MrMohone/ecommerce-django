@@ -7,16 +7,23 @@ from .forms import CustomerRegistrationForm, CustomerProfileForm
 from django.contrib import messages
 from django.db.models import Q #Q is required for multiple conditions
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
+
+@login_required#ALL FUNCTIONS ARE WORK ONLY IF USER IS LOGIN
 def home(request):
     return render(request, "app/home.html")
 
+@login_required
 def about(request):
     return render(request, "app/about.html")
 
+@login_required
 def contact(request):
     return render(request, "app/contact.html")
 
+@method_decorator(login_required, name='dispatch')#ALL CLASS ARE WORK ONLY IF USER IS LOGIN
 class CategoryView(View):
     def get(self, request, val):
         #Fetch from db
@@ -24,6 +31,7 @@ class CategoryView(View):
         title = Product.objects.filter(category=val).values('title')#fetch only title
         return render(request, 'app/category.html', locals())
 
+@method_decorator(login_required, name='dispatch')
 class CategoryTitle(View):
     def get(self, request, val):
         product = Product.objects.filter(title=val)
@@ -31,12 +39,13 @@ class CategoryTitle(View):
         return render(request, 'app/category.html', locals())
 
 
-
+@method_decorator(login_required, name='dispatch')
 class ProductDetail(View):
     def get(self, request, pk):
         product = Product.objects.get(pk=pk)
         return render(request, 'app/productdetail.html', locals())
-
+        
+@method_decorator(login_required, name='dispatch')
 class CustomerRegistrationView(View):
     def get(self, request):
         form = CustomerRegistrationForm()
@@ -52,6 +61,8 @@ class CustomerRegistrationView(View):
             
         return render(request, 'app/customerregistration.html', locals())
 
+        
+@method_decorator(login_required, name='dispatch')
 class ProfileView(View):
      def get(self, request):
         form = CustomerProfileForm
@@ -77,11 +88,12 @@ class ProfileView(View):
         return render(request, 'app/profile.html', locals())
 
 
+@method_decorator(login_required, name='dispatch')
 def address(request):
     add = Customer.objects.filter(user=request.user)#login user
     return render(request, 'app/address.html', locals())
 
-
+@method_decorator(login_required, name='dispatch')
 class updateAddress(View):
     def get(self,request, pk):
         add = Customer.objects.get(pk=pk)
@@ -104,6 +116,8 @@ class updateAddress(View):
              messages.warning(request,'Invalid Input Data')
         return redirect('address')
     
+
+@login_required
 def add_to_cart(request):
     user = request.user
     product_id = request.GET.get('prod_id')
@@ -111,7 +125,8 @@ def add_to_cart(request):
     
     Cart(user=user, product=product).save()
     return redirect('/cart')
-    
+
+@login_required    
 def show_cart(request):
     user = request.user
     cart = Cart.objects.filter(user=user)
@@ -123,6 +138,8 @@ def show_cart(request):
         
     return render(request, 'app/addtocart.html', locals())
 
+
+@method_decorator(login_required, name='dispatch')
 class checkout(View):
     def get(self,request):
         user = request.user#login user
@@ -142,6 +159,7 @@ class checkout(View):
     
     
 #linked from myscript.js
+@login_required
 def plus_cart(request):
     if request.method == "GET":
         prod_id = request.GET['prod_id']
@@ -168,7 +186,8 @@ def plus_cart(request):
             return JsonResponse(data)
         else:
             return JsonResponse({'error': 'Cart item not found'}, status=404)
-        
+
+@login_required      
 def minus_cart(request):
     if request.method == "GET":
         prod_id = request.GET['prod_id']
@@ -197,7 +216,7 @@ def minus_cart(request):
             return JsonResponse({'error': 'Cart item not found'}, status=404)
 
 
-
+@login_required
 def remove_cart(request):
     if request.method == "GET":
         prod_id = request.GET['prod_id']
@@ -217,7 +236,9 @@ def remove_cart(request):
             'totalamount': totalamount
         }
         return JsonResponse(data)
-    
+
+        
+@login_required
 def search(request):
     query = request.GET.get('search')
     totalitem = 0
