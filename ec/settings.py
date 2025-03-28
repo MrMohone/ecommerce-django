@@ -121,3 +121,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #for display all email links in the console
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+#FOR PAYMENT:----
+# RAZOR_KEY_ID = '*******************'
+# RAZOR_KEY_SECRET = '*******************'

@@ -50,9 +50,10 @@
                 <a class="nav-link text-white" href="{% url 'contact' %}">Contact Us</a>
               </li>
             </ul>
-            <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
+
+            <form class="d-flex" role="search" action='/search'>
+              <input class="form-control me-2" type="search" placeholder="Search" name='search' aria-label="Search">
+              <button class="btn btn-outline-white" type="submit">Search</button>
             </form>
           </div>
 
@@ -89,6 +90,7 @@
       {% block banner-slider %}{% endblock  %}
       {% block information %}{% endblock information %}
       {% block main-content %}{% endblock main-content %}
+      {% block payment-gateway %}{% endblock payment-gateway %}
 
       <footer class="container-fluid bg-success fixed-bottom text-center p-2 mt-5">
         Copyright : 2025 Develop by Mohe Black

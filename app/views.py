@@ -6,7 +6,7 @@ from .models import Cart, Product,Customer
 from .forms import CustomerRegistrationForm, CustomerProfileForm
 from django.contrib import messages
 from django.db.models import Q #Q is required for multiple conditions
-
+from django.conf import settings
 
 def home(request):
     return render(request, "app/home.html")
@@ -133,6 +133,11 @@ class checkout(View):
             value = p.quantity * p.product.discounted_price
             famount = famount + value
         totalamount = famount + 40
+        # razoramount = int( totalamount * 100)
+        # client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+        # data = {'amount': razoramount, 'currency': 'INR', 'receipt': 'order_rcptid_12'}
+        # payment_response = client.order.create(data=data)
+        # print(payment_response)
         return render(request, 'app/checkout.html',locals())
     
     
@@ -212,3 +217,13 @@ def remove_cart(request):
             'totalamount': totalamount
         }
         return JsonResponse(data)
+    
+def search(request):
+    query = request.GET.get('search')
+    totalitem = 0
+    # wishitem = 0
+    if request.user.is_authenticated:
+        totalitem = len(Cart.objects.filter(user=request.user))
+        # wishitem = len(wishitem.objects.filter(user=request.user))
+    product = Product.objects.filter(Q(title__icontains=query) )#name
+    return render(request, 'app/search.html', locals())
