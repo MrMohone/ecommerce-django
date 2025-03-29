@@ -1,5 +1,6 @@
 from django.contrib import admin
 from . models import Product,Customer, Cart,Payment,OrderPlaced
+from django.contrib.auth.models import Group
 
 @admin.register(Product)
 class ProductModelAdmin(admin.ModelAdmin):
@@ -20,3 +21,7 @@ class PaymentModelAdmin(admin.ModelAdmin):
 @admin.register(OrderPlaced)
 class OrderPlacedModelAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'customer', 'quantity', 'ordered_date', 'status', 'payment']
+    
+    
+    
+admin.site.unregister(Group) #hidde Group from admin panel,b/c we are not using it

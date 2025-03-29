@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render,redirect
-from django.db.models import Count
 from django.views import View
+
+from app import admin
 from .models import Cart, Product,Customer
 from .forms import CustomerRegistrationForm, CustomerProfileForm
 from django.contrib import messages
@@ -9,6 +10,7 @@ from django.db.models import Q #Q is required for multiple conditions
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+
 
 
 @login_required#ALL FUNCTIONS ARE WORK ONLY IF USER IS LOGIN
@@ -45,7 +47,7 @@ class ProductDetail(View):
         product = Product.objects.get(pk=pk)
         return render(request, 'app/productdetail.html', locals())
         
-@method_decorator(login_required, name='dispatch')
+#@method_decorator(login_required, name='dispatch') :#🙌WEDN'T NEED FOR REGISTRATION 
 class CustomerRegistrationView(View):
     def get(self, request):
         form = CustomerRegistrationForm()
@@ -248,3 +250,5 @@ def search(request):
         # wishitem = len(wishitem.objects.filter(user=request.user))
     product = Product.objects.filter(Q(title__icontains=query) )#name
     return render(request, 'app/search.html', locals())
+
+
